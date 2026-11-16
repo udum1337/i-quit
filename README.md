@@ -28,9 +28,9 @@
 │   ├── css/
 │   ├── js/
 │   └── README.md
+├── codemagic.yaml          # сборка и публикация в TestFlight
 ├── ios/
 │   ├── project.yml         # XcodeGen: приложение, виджет, тесты
-│   ├── codemagic.yaml      # сборка и публикация в TestFlight
 │   ├── Support/            # Signing.xcconfig (генерируемые plist/entitlements в .gitignore)
 │   ├── Shared/             # WidgetSnapshot, общий для приложения и виджета
 │   ├── IQuit/              # SwiftUI-приложение
@@ -122,6 +122,16 @@ xcodebuild test \
 
 Проверяются расчёты стоимости для сигарет, вейпа и кальяна, вехи, достижения, срыв и undo, `PlanDraft`, плюрализация виджета и прогресс.
 
+### Codemagic: проверка без подписи
+
+Workflow **I Quit — Compile & Test** (`ios-verify`) не требует Apple Developer Program:
+
+- ставит XcodeGen и генерирует проект;
+- собирает приложение и виджет для iOS Simulator без подписи;
+- запускает юнит-тесты на первом доступном iPhone-симуляторе.
+
+Запускать вручную из Codemagic после подключения репозитория. Этот workflow нужен, чтобы ловить ошибки компиляции до настройки сертификатов.
+
 ### Codemagic → TestFlight
 
 Нужно подготовить:
@@ -153,7 +163,7 @@ xcodebuild test \
 Bundle ID и App Group — **плейсхолдеры**. Если будете менять, обновите одновременно:
 
 - `ios/project.yml` (bundle IDs и entitlements);
-- `ios/codemagic.yaml` (`BUNDLE_ID`, signing `bundle_identifier`);
+- `codemagic.yaml` (`BUNDLE_ID`, signing `bundle_identifier`);
 - `ios/Shared/WidgetSnapshot.swift` (`WidgetStore.appGroup`).
 
 ### Подпись
