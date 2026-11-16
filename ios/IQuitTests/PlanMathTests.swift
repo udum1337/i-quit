@@ -180,6 +180,9 @@ final class PlanMathTests: XCTestCase {
         XCTAssertTrue(snapshot.moneyText(at: now).contains("₽"))
 
         snapshot.languageCode = "en"
+        snapshot.dayOne = "day"
+        snapshot.dayFew = "days"
+        snapshot.dayMany = "days"
         XCTAssertEqual(snapshot.dayWord(for: 1), "day")
         XCTAssertEqual(snapshot.dayWord(for: 2), "days")
     }
