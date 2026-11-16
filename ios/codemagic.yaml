@@ -1,0 +1,69 @@
+workflows:
+  ios-testflight:
+    name: I Quit — TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 90
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        # Codemagic also picks up profiles for com.iquit.ios.*
+        # (the widget extension) automatically.
+        bundle_identifier: com.iquit.ios
+      groups:
+        - app_store_connect
+      vars:
+        XCODE_PROJECT: IQuit.xcodeproj
+        XCODE_SCHEME: IQuit
+        BUNDLE_ID: com.iquit.ios
+
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+
+      - name: Configure signing
+        script: |
+          cd ios
+          if [ -z "$APPLE_TEAM_ID" ]; then
+            echo "APPLE_TEAM_ID is not set. Add it to the app_store_connect variable group."
+            exit 1
+          fi
+          printf 'DEVELOPMENT_TEAM = %s\nCODE_SIGN_STYLE = Automatic\n' "$APPLE_TEAM_ID" > Support/Signing.xcconfig
+
+      - name: Generate Xcode project
+        script: |
+          cd ios
+          xcodegen generate
+
+      - name: Apply provisioning profiles
+        script: |
+          cd ios
+          xcode-project use-profiles
+
+      - name: Set build number
+        script: |
+          cd ios
+          BUILD_NUMBER=$(($(date +%s) / 60))
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $CM_ENV
+          agvtool new-version -all "$BUILD_NUMBER"
+
+      - name: Build IPA
+        script: |
+          cd ios
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - ios/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        # Add testers in App Store Connect → TestFlight.

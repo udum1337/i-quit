@@ -1,0 +1,4 @@
+// Codemagic overwrites this file before generating the Xcode project.
+// For a local build, either put your Apple Team ID here or select a team in Xcode.
+DEVELOPMENT_TEAM =
+CODE_SIGN_STYLE = Automatic
