@@ -1,4 +1,52 @@
 workflows:
+  ios-verify:
+    name: I Quit — Compile & Test (no signing)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    environment:
+      xcode: latest
+      vars:
+        XCODE_PROJECT: IQuit.xcodeproj
+        XCODE_SCHEME: IQuit
+
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+
+      - name: Generate Xcode project
+        script: |
+          cd ios
+          xcodegen generate
+
+      - name: Build for simulator
+        script: |
+          cd ios
+          xcodebuild build \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Run unit tests
+        script: |
+          cd ios
+          DEVICE_ID=$(xcrun simctl list devices available | grep -m1 -E '^[[:space:]]+iPhone' | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
+          if [ -z "$DEVICE_ID" ]; then
+            echo "No available iPhone simulator found."
+            exit 1
+          fi
+          xcodebuild test \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            CODE_SIGNING_ALLOWED=NO
+
+    artifacts:
+      - /tmp/xcodebuild_logs/*.log
+
   ios-testflight:
     name: I Quit — TestFlight
     instance_type: mac_mini_m2
