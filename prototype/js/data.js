@@ -124,9 +124,10 @@ const CURRENCIES = {
   UAH: { code: 'UAH', symbol: '₴', label: { ru: 'Украинская гривна', en: 'Ukrainian hryvnia' } },
   BYN: { code: 'BYN', symbol: 'Br', label: { ru: 'Белорусский рубль', en: 'Belarusian ruble' } },
   GBP: { code: 'GBP', symbol: '£', label: { ru: 'Фунт стерлингов', en: 'British pound' } },
-  TRY: { code: 'TRY', symbol: '₺', label: { ru: 'Турецкая лира', en: 'Turkish lira' } }
+  TRY: { code: 'TRY', symbol: '₺', label: { ru: 'Турецкая лира', en: 'Turkish lira' } },
+  CNY: { code: 'CNY', symbol: '¥', label: { ru: 'Китайский юань', en: 'Chinese yuan' } }
 };
-const CURRENCY_ORDER = ['RUB', 'USD', 'EUR', 'KZT', 'UAH', 'BYN', 'GBP', 'TRY'];
+const CURRENCY_ORDER = ['RUB', 'USD', 'EUR', 'KZT', 'UAH', 'BYN', 'GBP', 'TRY', 'CNY'];
 
 const SOURCES = {
   who: { org: 'WHO', title: { ru: 'Tobacco: health benefits of smoking cessation', en: 'Tobacco: health benefits of smoking cessation' }, url: 'https://www.who.int/news-room/questions-and-answers/item/tobacco-health-benefits-of-smoking-cessation' },

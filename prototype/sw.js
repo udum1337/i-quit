@@ -1,5 +1,5 @@
 /* Offline cache for the prototype PWA. Bump CACHE when the asset list changes. */
-const CACHE = "i-quit-pwa-v2";
+const CACHE = "i-quit-pwa-v3";
 const ASSETS = [
   "./",
   "./index.html",

@@ -9,6 +9,7 @@ enum CurrencyCode: String, CaseIterable, Identifiable, Codable {
     case BYN
     case GBP
     case TRY
+    case CNY
 
     var id: String { rawValue }
 
@@ -22,6 +23,7 @@ enum CurrencyCode: String, CaseIterable, Identifiable, Codable {
         case .BYN: return "Br"
         case .GBP: return "£"
         case .TRY: return "₺"
+        case .CNY: return "¥"
         }
     }
 
@@ -35,6 +37,7 @@ enum CurrencyCode: String, CaseIterable, Identifiable, Codable {
         case .BYN: return LocalizedText(ru: "Белорусский рубль", en: "Belarusian ruble")
         case .GBP: return LocalizedText(ru: "Фунт стерлингов", en: "British pound")
         case .TRY: return LocalizedText(ru: "Турецкая лира", en: "Turkish lira")
+        case .CNY: return LocalizedText(ru: "Китайский юань", en: "Chinese yuan")
         }
     }
 }
