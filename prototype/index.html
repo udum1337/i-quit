@@ -2,9 +2,26 @@
 <html lang="ru" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Интерактивный прототип приложения для отказа от никотина: стрик, таймлайн здоровья, экономия и достижения.">
+  <meta name="theme-color" content="#F2F2F7">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Не курю">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <title>Не курю / I Quit — интерактивный прототип</title>
+  <script>
+    (function () {
+      var standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+        window.navigator.standalone === true ||
+        /(?:\?|&)standalone=1(?:&|$)/.test(window.location.search);
+      if (standalone) document.documentElement.classList.add("is-standalone");
+    })();
+  </script>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/screens.css">
 </head>
@@ -83,5 +100,12 @@
   <script src="js/ui-onboarding.js"></script>
   <script src="js/ui-sheet.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function () { /* offline cache is optional */ });
+      });
+    }
+  </script>
 </body>
 </html>

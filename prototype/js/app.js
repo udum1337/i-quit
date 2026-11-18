@@ -315,8 +315,11 @@ function resolvedTheme() {
 }
 
 function applyTheme() {
-  document.documentElement.dataset.theme = resolvedTheme();
+  const theme = resolvedTheme();
+  document.documentElement.dataset.theme = theme;
   document.documentElement.lang = state.lang;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", theme === "dark" ? "#000000" : "#F2F2F7");
 }
 
 /* ---------------- Actions ---------------- */

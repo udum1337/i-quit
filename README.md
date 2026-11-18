@@ -6,11 +6,14 @@
 
 Репозиторий: https://github.com/udum1337/i-quit
 
+PWA-демо: https://udum1337.github.io/i-quit/prototype/
+
 ## Статус
 
 | Часть | Статус |
 |---|---|
 | HTML-прототип | ✅ Собран и проверен |
+| PWA-демо | ✅ GitHub Pages, офлайн-кэш |
 | iOS-исходники (SwiftUI, iOS 17+) | ✅ Подготовлены |
 | Локализация RU / EN | ✅ 215 общих строк + InfoPlist |
 | Виджет WidgetKit | ✅ Small, Medium, Lock Screen |
@@ -24,8 +27,13 @@
 
 ```
 .
+├── index.html              # редирект на PWA-демо
+├── .nojekyll               # отключает Jekyll на GitHub Pages
 ├── prototype/              # утверждённый интерактивный прототип
 │   ├── index.html
+│   ├── manifest.webmanifest
+│   ├── sw.js               # офлайн-кэш PWA
+│   ├── icons/
 │   ├── css/
 │   ├── js/
 │   └── README.md
@@ -50,7 +58,11 @@
 
 ## Прототип
 
-Откройте `prototype/index.html` в браузере. Подробности, демо-данные и чек-лист проверки — в [`prototype/README.md`](prototype/README.md).
+Онлайн-демо: https://udum1337.github.io/i-quit/prototype/
+
+На iPhone откройте ссылку в Safari, нажмите «Поделиться» → «На экран “Домой”». Запустится полноэкранная версия без интерфейса браузера. После первого открытия файлы кэшируются и работают офлайн.
+
+Локально можно открыть `prototype/index.html` в браузере. Подробности, демо-данные и чек-лист проверки — в [`prototype/README.md`](prototype/README.md).
 
 Прототип показывает продуктовые решения: 5 шагов онбординга, 5 продуктов, 8 валют, 16 вех здоровья, 17 достижений, срыв с отменой, экспорт JSON и переключение RU/EN.
 

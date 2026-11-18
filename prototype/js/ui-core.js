@@ -178,6 +178,12 @@ function updateLive() {
 function fitPhone() {
   const wrap = document.getElementById("phone-wrap");
   if (!wrap) return;
+  if (document.documentElement.classList.contains("is-standalone")) {
+    wrap.style.removeProperty("width");
+    wrap.style.removeProperty("height");
+    document.documentElement.style.removeProperty("--phone-scale");
+    return;
+  }
   const bar = document.querySelector(".stage-bar");
   const top = bar ? bar.getBoundingClientRect().bottom + 16 : 20;
   const availH = Math.max(320, window.innerHeight - top - 46);
