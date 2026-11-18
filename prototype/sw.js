@@ -1,5 +1,5 @@
-/* Offline cache for the prototype PWA. Bump CACHE when app files change. */
-const CACHE = "i-quit-pwa-v1";
+/* Offline cache for the prototype PWA. Bump CACHE when the asset list changes. */
+const CACHE = "i-quit-pwa-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -41,6 +41,14 @@ self.addEventListener("activate", function (event) {
   );
 });
 
+function cacheResponse(request, response) {
+  if (response && response.ok && response.type === "basic") {
+    const copy = response.clone();
+    caches.open(CACHE).then(function (cache) { cache.put(request, copy); });
+  }
+  return response;
+}
+
 self.addEventListener("fetch", function (event) {
   const request = event.request;
   if (request.method !== "GET") return;
@@ -48,19 +56,29 @@ self.addEventListener("fetch", function (event) {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then(function (response) { return cacheResponse(request, response); })
+        .catch(function () {
+          return caches.match(request, { ignoreSearch: true })
+            .then(function (cached) { return cached || caches.match("./index.html"); });
+        })
+    );
+    return;
+  }
+
+  const network = fetch(request)
+    .then(function (response) { return cacheResponse(request, response); })
+    .catch(function () { return null; });
+
+  event.waitUntil(network);
+
   event.respondWith(
     caches.match(request, { ignoreSearch: true }).then(function (cached) {
       if (cached) return cached;
-
-      return fetch(request).then(function (response) {
-        if (response && response.ok && response.type === "basic") {
-          const copy = response.clone();
-          caches.open(CACHE).then(function (cache) { cache.put(request, copy); });
-        }
-        return response;
-      }).catch(function () {
-        if (request.mode === "navigate") return caches.match("./index.html");
-        return Response.error();
+      return network.then(function (response) {
+        return response || Response.error();
       });
     })
   );
