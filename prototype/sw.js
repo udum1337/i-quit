@@ -44,9 +44,11 @@ self.addEventListener("activate", function (event) {
 function cacheResponse(request, response) {
   if (response && response.ok && response.type === "basic") {
     const copy = response.clone();
-    caches.open(CACHE).then(function (cache) { cache.put(request, copy); });
+    return caches.open(CACHE)
+      .then(function (cache) { return cache.put(request, copy); })
+      .then(function () { return response; });
   }
-  return response;
+  return Promise.resolve(response);
 }
 
 self.addEventListener("fetch", function (event) {
